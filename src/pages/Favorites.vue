@@ -2,14 +2,14 @@
   <div class="favorite-page">
     <loader v-if="isLoading" :loading="isLoading" />
     <WeatherCard
-      v-for="(weather, index) in filteredWeatherList"
+      v-for="(weather, index) in favorites"
       :key="index"
       :weather="weather"
       :index="index"
-      :card-length="filteredWeatherList.length"
+      :card-length="favorites.length"
       favorite
     />
-    <div v-if="filteredWeatherList.length <= 0" class="empty-card">
+    <div v-if="favorites.length <= 0" class="empty-card">
       <img src="@/assets/images/empty-card.png" alt="empty-card">
     </div>
   </div>
@@ -30,10 +30,7 @@ export default {
     Loader,
   },
   computed: {
-    ...mapGetters( 'weather', [ 'weatherList', 'isLoading' ] ),
-    filteredWeatherList() {
-      return this.weatherList.filter( city => city.favorite );
-    }
+    ...mapGetters( 'weather', [ 'favorites', 'isLoading' ] ),
   },
   methods: {
     ...mapActions( 'weather', [

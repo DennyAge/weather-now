@@ -43,11 +43,13 @@
       />
       <chart
         v-if="currentTab === 'day'"
+        :key="chartKey"
         :hourly-data="weather.hourlyData"
         :location-id="weather.id + index"
       />
       <chart
         v-else-if="currentTab === 'week'"
+        :key="chartKey + 1"
         :hourly-data="weather.dailyData"
         :location-id="weather.id + index"
         week
@@ -99,16 +101,25 @@ export default {
   data: () => {
     return {
       currentTab: 'day',
-      tabMenu: []
+      tabMenu: [],
+      chartKey: Date.now(),
     };
   },
   watch: {
     '$i18n.locale'() {
       this.updateTabMenuLabels();
+      this.updateChartKey();
+    },
+    '$route'( ) { 
+      this.updateChartKey();
     }
   },
   mounted() {
     this.updateTabMenuLabels();
+    window.addEventListener( 'resize', this.updateChartKey );
+  },
+  beforeUnmount() {
+    window.removeEventListener( 'resize', this.updateChartKey );
   },
   methods: {
     ...mapActions( 'weather', [
@@ -130,6 +141,9 @@ export default {
         { label: this.$t( 'tab1' ), value: 'day' },
         { label: this.$t( 'tab2' ), value: 'week' }
       ];
+    },
+    updateChartKey() {
+      this.chartKey = Date.now();
     }
   },
 

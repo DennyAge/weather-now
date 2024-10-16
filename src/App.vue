@@ -19,10 +19,19 @@ export default {
       lang: ''
     };
   },
+  watch: {
+    '$i18n.locale'( newLang ) {
+      this.lang = newLang;
+      localStorage.setItem( 'language', newLang );
+      this.$store.dispatch( 'weather/updateWeather' );
+    }
+  },
   mounted() {
     this.lang = this.$i18n.locale;
     localStorage.setItem( 'language', this.lang );
+    this.$store.dispatch( 'weather/startWeatherUpdates' );
   },
+
   methods: {
 
   }

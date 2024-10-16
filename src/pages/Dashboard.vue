@@ -69,8 +69,6 @@ export default {
     ...mapActions( 'weather', [
       'fetchWeather',
       'addNewWeatherCard',
-      'addToFavorites',
-      'removeFromFavorites',
       'removeWeatherCard'
     ] ),
     removeCard( value ) {
