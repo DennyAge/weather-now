@@ -1,16 +1,19 @@
-export const formatDate = ( dateTimeString, type ) => {
-  const typeOptions = type || 'short';
-  const lang = localStorage.getItem( 'language' );
-  const date = new Date( dateTimeString );
+export const formatDate = ( unixTimestamp, type = 'short' ) => {
+  const lang = localStorage.getItem( 'language' ) || 'en';
+  const date = new Date( unixTimestamp * 1000 );
 
-  const options = {
-    weekday: typeOptions,
-    month: typeOptions,
-    day: 'numeric',
-  };
-  if ( lang === 'ua' ) {
-    return date.toLocaleDateString( 'uk-UA', options );
-  } else {
-    return date.toLocaleDateString( 'en-US', options );
+  if ( isNaN( date ) ) {
+    return 'Invalid Date';
   }
+
+  const formatTypes = {
+    short: { weekday: 'short', month: 'short', day: 'numeric' },
+    long: { weekday: 'long', month: 'long', day: 'numeric' },
+  };
+
+  const options = formatTypes[type] || formatTypes['short'];
+
+  return lang === 'ua'
+    ? date.toLocaleDateString( 'uk-UA', options )
+    : date.toLocaleDateString( 'en-US', options );
 };
