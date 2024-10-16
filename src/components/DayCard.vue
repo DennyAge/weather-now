@@ -154,7 +154,13 @@ export default {
 @media (max-width: 768px) {
   .weather-card__day {
     flex-direction: column;
-    padding: 1.25em 5em;
+    padding: 1.25em 3em;
+  }
+}
+@media (max-width: 400px) {
+  .weather-card__day {
+    flex-direction: column;
+    padding: 1.25em 1em;
   }
 }
 </style>

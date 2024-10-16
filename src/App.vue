@@ -2,11 +2,17 @@
   <div class="container">
     <page-header />
     <router-view />
+    <button
+      v-if="showScrollButton"
+      class="scroll-to-top"
+      @click="scrollToTop"
+    >
+      ↑
+    </button>
   </div>
 </template>
 
 <script>
-
 import PageHeader from '@/components/Header.vue';
 
 export default {
@@ -16,7 +22,8 @@ export default {
   },
   data() {
     return {
-      lang: ''
+      lang: '',
+      showScrollButton: false // новое свойство для отображения кнопки
     };
   },
   watch: {
@@ -30,13 +37,26 @@ export default {
     this.lang = this.$i18n.locale;
     localStorage.setItem( 'language', this.lang );
     this.$store.dispatch( 'weather/startWeatherUpdates' );
+
+    window.addEventListener( 'scroll', this.handleScroll ); // добавляем обработчик прокрутки
   },
-
+  beforeUnmount() {
+    window.removeEventListener( 'scroll', this.handleScroll ); // удаляем обработчик
+  },
   methods: {
-
+    handleScroll() {
+      this.showScrollButton = window.scrollY > 300; // показываем кнопку при прокрутке
+    },
+    scrollToTop() {
+      window.scrollTo( {
+        top: 0,
+        behavior: 'smooth' // плавная прокрутка
+      } );
+    }
   }
 };
 </script>
+
 
 
 <style>
@@ -93,7 +113,33 @@ body {
   width: 100%;
   max-width: 75em;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 1.25rem;
   overflow: hidden;
+}
+.scroll-to-top {
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 50%;
+  width: 3.125rem;
+  height: 3.125rem;
+  font-size: 1.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+  z-index: 10;
+}
+
+.scroll-to-top:hover {
+  background-color: var(--primary-focus-color);
+}
+
+.scroll-to-top:focus {
+  outline: none;
 }
 </style>

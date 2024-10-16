@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header class="header" :class="['header', { 'sticky': isSticky }]">
     <div class="logo-container">
       <img class="logo" src="@/assets/logo.svg" alt="logo">
       <span>WeatherNow</span>
@@ -74,12 +74,24 @@ export default {
   data() {
     return {
       isMenuOpen: false,
+      isSticky: false,
     };
   },
+  mounted() {
+    window.addEventListener( 'scroll', this.handleScroll );
+  },
+
+  beforeUnmount() {
+    window.removeEventListener( 'scroll', this.handleScroll );
+  },
+
   methods: {
     toggleMenu() {
       return this.isMenuOpen = !this.isMenuOpen;
-    }
+    },
+    handleScroll() {
+      this.isSticky = window.scrollY > 100; // Проверяем, прокрутился ли экран больше чем на 100px
+    },
   }
 };
 </script>
@@ -202,6 +214,7 @@ export default {
   height: 1.25rem;
   filter: var(--icon-fill-color);
 }
+
 @media (max-width: 768px) {
   .burger-btn {
     display: block;
